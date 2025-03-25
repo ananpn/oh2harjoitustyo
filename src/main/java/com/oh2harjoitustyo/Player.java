@@ -25,6 +25,7 @@ public class Player extends Entity{
         this.shape = new Circle(40);
 
         this.speed = speed;
+        this.xPosition.setValue(-300d);
 
 
         shape.setStroke(Color.BLACK);

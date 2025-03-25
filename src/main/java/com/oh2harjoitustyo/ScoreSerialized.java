@@ -49,4 +49,9 @@ public class ScoreSerialized implements Serializable {
         stringBuilder.append(date.getYear());
         return stringBuilder.toString();
     }
+
+    public static int baseScoreToActualScore(double score) {
+        return (int) (10 * (int) (score * 10000d)/250d);
+    }
+
 }

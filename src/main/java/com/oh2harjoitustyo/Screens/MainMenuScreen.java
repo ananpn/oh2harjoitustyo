@@ -20,7 +20,7 @@ public class MainMenuScreen {
 
     public static Scene createScene(SceneManager sceneManager){
         StackPane layout = new StackPane();
-        layout.setMinSize(800, 800);
+        layout.setMinSize(1200, 800);
         layout.setAlignment(Pos.CENTER);
 
         Scene output = new Scene(layout);
