@@ -2,61 +2,37 @@ package com.oh2harjoitustyo.Screens;
 
 import com.oh2harjoitustyo.GameEngine;
 import com.oh2harjoitustyo.SceneManager;
-import javafx.application.Application;
+import com.oh2harjoitustyo.Utils;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.util.Random;
 
 
+public class GameScreen  {
 
-public class GameScreen extends Application {
+    private SceneManager sceneManager;
 
-    private double rootWidth = 1000;
-    private double rootHeight = 1000;
+    public Pane screen;
 
-    public static void main(String[] args) {
-        launch(args);
+    public GameScreen(SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
     }
 
-    @Override
-    public void start(Stage stage) {
-
-        StackPane root = new StackPane();
-        root.setMinSize(rootWidth, rootHeight);
-        Scene scene = new Scene(root);
-
-
-        Random random = new Random();
-
-
-
-        GameEngine gameEngine = new GameEngine(scene, root);
-
-        stage.setScene(scene);
-        stage.setTitle("");
-        stage.show();
-        gameEngine.start();
-
-
+    public Pane getScreen(){
+        return screen;
     }
 
-    public static Scene createScene(SceneManager sceneManager){
+
+    public void createScreen(){
         StackPane layout = new StackPane();
-        layout.setMinSize(1200, 800);
-        
-        Scene output = new Scene(layout);
+        layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
+        screen = layout;
 
-        GameEngine gameEngine = new GameEngine(output, layout);
+    }
 
-        gameEngine.start();
-        return output;
-
-
+    public void startGame(Scene scene){
+        GameEngine gameEngine = new GameEngine(screen, sceneManager);
+        gameEngine.start(scene);
 
     }
 

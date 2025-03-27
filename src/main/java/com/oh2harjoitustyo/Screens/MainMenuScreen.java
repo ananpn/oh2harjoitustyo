@@ -1,31 +1,24 @@
 package com.oh2harjoitustyo.Screens;
 import com.oh2harjoitustyo.SceneManager;
-import javafx.application.Application;
+import com.oh2harjoitustyo.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class MainMenuScreen {
 
-    public static void main(String[] args){
-        
-    }
 
-
-
-    public static Scene createScene(SceneManager sceneManager){
+    public Pane createScreen(SceneManager sceneManager){
         StackPane layout = new StackPane();
-        layout.setMinSize(1200, 800);
+        layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
         layout.setAlignment(Pos.CENTER);
 
-        Scene output = new Scene(layout);
-
         VBox menuBox = new VBox();
+        menuBox.setAlignment(Pos.CENTER);
+        menuBox.setSpacing(10);
 
         Button newGameButton = new Button("New Game");
         newGameButton.setOnAction(e -> {
@@ -45,7 +38,7 @@ public class MainMenuScreen {
         menuBox.getChildren().addAll(newGameButton, highScoresButton, exitButton);
         layout.getChildren().add(menuBox);
 
-        return output;
+        return layout;
 
 
 

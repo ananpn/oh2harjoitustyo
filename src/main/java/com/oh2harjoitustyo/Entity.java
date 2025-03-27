@@ -14,6 +14,8 @@ abstract class Entity {
     SimpleObjectProperty<Double> xPosition = new SimpleObjectProperty<>(0d);
     SimpleObjectProperty<Double> yPosition = new SimpleObjectProperty<>(0d);
 
+    SimpleObjectProperty<Double> size = new SimpleObjectProperty<>(40d);
+
     protected Shape shape;
 
     public Shape getShape() {

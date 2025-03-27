@@ -1,49 +1,51 @@
 package com.oh2harjoitustyo;
 
+import com.oh2harjoitustyo.Screens.GameOverScreen;
+import com.oh2harjoitustyo.Screens.GameScreen;
 import com.oh2harjoitustyo.Screens.HighScoreScreen;
+import com.oh2harjoitustyo.Screens.MainMenuScreen;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class SceneManager {
     private final Stage stage;
-    private Scene mainMenuScene;
-    private Scene gameScene;
-    private Scene gameOverScene;
-    private Scene highScoreScene;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
     }
 
-    public void setMainMenuScene(Scene scene) {
-        this.mainMenuScene = scene;
+    public Scene getScene() {
+        return stage.getScene();
     }
 
-    public void setGameScene(Scene scene) {
-        this.gameScene = scene;
-    }
-
-    public void setGameOverScene(Scene scene) {
-        this.gameOverScene = scene;
+    public void setScene(Pane newRoot) {
+        Scene scene = new Scene(newRoot);
+        stage.setScene(scene);
     }
 
     public void showMainMenu() {
-        stage.setScene(mainMenuScene);
+        setScene(new MainMenuScreen().createScreen(this));
         stage.setTitle("Main Menu");
     }
 
     public void showGameScreen() {
-        stage.setScene(gameScene);
-        stage.setResizable(false);
+        GameScreen gameScreen = new GameScreen(this);
+        gameScreen.createScreen();
+        setScene(gameScreen.getScreen());
+        gameScreen.startGame(getScene());
         stage.setTitle("Game");
     }
 
-    public void showGameOverScreen() {
-        stage.setScene(gameOverScene);
+    public void showGameOverScreen(double finalScore) {
+        GameOverScreen gameOverScreen = new GameOverScreen();
+        gameOverScreen.setFinalScore(finalScore);
+        setScene(gameOverScreen.createScreen(this));
         stage.setTitle("Game Over");
     }
 
     public void showHighScoreScreen() {
-        stage.setScene(highScoreScene);
+        setScene(new HighScoreScreen().createScreen(this));
+        stage.setTitle("High Scores");
     }
 }

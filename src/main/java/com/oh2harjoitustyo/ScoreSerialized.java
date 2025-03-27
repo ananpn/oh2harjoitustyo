@@ -1,12 +1,17 @@
 package com.oh2harjoitustyo;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 public class ScoreSerialized implements Serializable {
     private int score;
     private String playerName;
     private Date date;
+
+    public static Comparator<? super ScoreSerialized> comparator() {
+        return null;
+    }
 
     public String getPlayerName() {
         return playerName;
@@ -53,5 +58,12 @@ public class ScoreSerialized implements Serializable {
     public static int baseScoreToActualScore(double score) {
         return (int) (10 * (int) (score * 10000d)/250d);
     }
+    
+    static Comparator <ScoreSerialized> comparator = new Comparator() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            return ((ScoreSerialized) o2).getScore()-((ScoreSerialized) o1).getScore();
+        }
+    };
 
 }

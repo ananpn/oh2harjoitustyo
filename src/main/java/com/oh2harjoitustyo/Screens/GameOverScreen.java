@@ -1,15 +1,26 @@
 package com.oh2harjoitustyo.Screens;
+
 import com.oh2harjoitustyo.HighScoresManager;
 import com.oh2harjoitustyo.SceneManager;
+import com.oh2harjoitustyo.ScoreSerialized;
 import com.oh2harjoitustyo.Utils;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class HighScoreScreen  {
+import java.time.Instant;
+import java.util.Date;
+
+public class GameOverScreen {
+    private double finalScore;
+
+    public void setFinalScore(double finalScore) {
+        this.finalScore = finalScore;
+    }
 
     HighScoresManager highScoresManager = new HighScoresManager();
 
@@ -19,23 +30,21 @@ public class HighScoreScreen  {
         layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
         layout.setAlignment(Pos.CENTER);
 
-        Text highScoreScreenText = new Text("High Scores");
-        highScoreScreenText.setTranslateY(+40 - Utils.screenHeight/2);
-        layout.getChildren().add(highScoreScreenText);
+        Text highScoreText = new Text("Game Over");
+        Text finalScoreText = new Text("Score: " + Math.round(finalScore));
+        finalScoreText.setTranslateY(100);
 
+        layout.getChildren().add(highScoreText);
+        layout.getChildren().add(finalScoreText);
 
-        VBox highScoresBox = new VBox();
+        SimpleStringProperty playerNameProperty = new SimpleStringProperty("Antti");
 
         highScoresManager.readHighScores();
-        highScoresManager.highScores.forEach( highScore -> {
-            Text highScoreText = new Text(highScore.getScore() + " " + highScore.getPlayerName());
-            highScoresBox.getChildren().add(highScoreText);
-
-        });
-        highScoresBox.setAlignment(Pos.CENTER);
-        highScoresBox.setSpacing(10);
-        layout.getChildren().add(highScoresBox);
-
+        highScoresManager.checkNewScore(new ScoreSerialized(
+            (int) Math.round(finalScore),
+            playerNameProperty.getValue(),
+            Date.from(Instant.now())
+        ));
 
         Button backButton = new Button("Back");
         backButton.setTranslateX(-400);
