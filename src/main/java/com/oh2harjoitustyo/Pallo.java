@@ -1,15 +1,7 @@
 package com.oh2harjoitustyo;
 
-import javafx.animation.AnimationTimer;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 
 // enemy
 public class Pallo extends Entity {
