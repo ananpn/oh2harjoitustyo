@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class GameEngine {
         this.gamePane.getChildren().add(player.shape);
         this.sceneManager = sceneManager;
         Text scoreText = new Text("");
+        scoreText.setStroke(Color.WHITESMOKE);
         scoreText.textProperty().bind(scoreTextProperty);
         scoreText.setTranslateY(40-Utils.screenHeight/2);
         gamePane.getChildren().add(scoreText);
@@ -73,12 +75,23 @@ public class GameEngine {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (random.nextDouble() > 0.99-calculateDifficultyCoefficient() && !isModifying) {
+                if (lastUpdate == 0) {
+                    lastUpdate = now;
+                    return;
+                }
+                double deltaTime = (now - lastUpdate) / 1_000_000.0; // Convert ns to ms
+                if (deltaTime < 10) return;
+                lastUpdate = now;
+                baseScore += deltaTime/1000.0;
+                scoreTextProperty.set(String.valueOf(ScoreSerialized.baseScoreToActualScore(baseScore)));
+                double diff = calculateDifficultyCoefficient();
+
+                if (random.nextDouble() > 0.90-diff && !isModifying) {
                     isModifying = true;
                     addEntity(new Pallo(
-                        40 + 50*random.nextDouble(),
-                        gamePane.getHeight()*(random.nextDouble()-0.5), 400+500*random.nextDouble())
-                    );
+                        25 + 30*random.nextDouble()+30*diff,
+                        gamePane.getHeight()*(random.nextDouble()-0.5), 450+300*random.nextDouble()+400*diff
+                    ));
                     isModifying = false;
 
                 }
@@ -88,16 +101,9 @@ public class GameEngine {
                     isModifying = false;
                 }
 
-                if (lastUpdate == 0) {
-                    lastUpdate = now;
-                    return;
-                }
-                double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert ns to seconds
-                lastUpdate = now;
-                baseScore += deltaTime;
-                scoreTextProperty.set(String.valueOf(ScoreSerialized.baseScoreToActualScore(baseScore)));
-                updatePlayerMovement(deltaTime);
-                updateEnemiesMovement(deltaTime);
+
+                updatePlayerMovement(deltaTime/1000.0);
+                updateEnemiesMovement(deltaTime/1000.0);
             }
         };
         gameLoop.start();
@@ -117,7 +123,7 @@ public class GameEngine {
         if (!pressedKeys.contains(KeyCode.SHIFT)) {
             player.setSpeed(Utils.playerSpeedBig);
             player.size.setValue(Utils.playerSizeBig);
-            energy.set(Math.min(energy.getValue() + moveAmount/maxEnergy, 1));
+            energy.set(Math.min(energy.getValue() + 0.5*moveAmount/maxEnergy, 1));
         }
         if (pressedKeys.contains(KeyCode.UP))
             player.yPosition.set(
@@ -140,7 +146,7 @@ public class GameEngine {
 
     private void updateEnemiesMovement(double deltaTime) {
         for (Entity entity : enemies) {
-            entity.updateMovement(deltaTime, entity.speed);
+            entity.updateMovement(deltaTime, entity.speed, baseScore);
         }
         checkCollisions();
     }
@@ -199,7 +205,7 @@ public class GameEngine {
     }
 
     private double calculateDifficultyCoefficient(){
-        return 0.5*(1-Math.exp(-baseScore/1000));
+        return 0.75*(1-Math.exp(-baseScore/1500.0));
 
     }
 }

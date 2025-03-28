@@ -16,8 +16,8 @@ public class Player extends Entity{
         this.xPosition.setValue(-300d);
 
 
-        shape.setStroke(Color.DARKGREY.darker());
-        shape.setFill(Color.DARKGREY.darker());
+        shape.setStroke(Color.DARKRED);
+        shape.setFill(Color.DARKRED);
 
 
         shape.translateXProperty().bind(xPosition);

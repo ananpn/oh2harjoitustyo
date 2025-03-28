@@ -1,4 +1,6 @@
 package com.oh2harjoitustyo.Screens;
+import com.oh2harjoitustyo.HighScoresManager;
+import com.oh2harjoitustyo.MusicPlayer;
 import com.oh2harjoitustyo.SceneManager;
 import com.oh2harjoitustyo.Utils;
 import javafx.geometry.Pos;
@@ -7,18 +9,34 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+
+import static com.oh2harjoitustyo.Utils.backGroundColor;
 
 public class MainMenuScreen {
 
 
     public Pane createScreen(SceneManager sceneManager){
+        HighScoresManager.initializeHighScores();
+
+
+
         StackPane layout = new StackPane();
+        layout.setStyle(backGroundColor);
         layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
         layout.setAlignment(Pos.CENTER);
 
         VBox menuBox = new VBox();
         menuBox.setAlignment(Pos.CENTER);
         menuBox.setSpacing(10);
+
+        Text menuText = new Text("NEON PANIC");
+        menuText.setScaleX(3);
+        menuText.setScaleY(3);
+        menuText.setStroke(Color.DEEPPINK);
+        menuBox.getChildren().add(menuText);
+        menuText.setTranslateY(-100);
 
         Button newGameButton = new Button("New Game");
         newGameButton.setOnAction(e -> {

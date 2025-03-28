@@ -25,11 +25,13 @@ public class SceneManager {
     }
 
     public void showMainMenu() {
+        MusicPlayer.playMenuMusic();
         setScene(new MainMenuScreen().createScreen(this));
         stage.setTitle("Main Menu");
     }
 
     public void showGameScreen() {
+        MusicPlayer.playGameMusic();
         GameScreen gameScreen = new GameScreen(this);
         gameScreen.createScreen();
         setScene(gameScreen.getScreen());

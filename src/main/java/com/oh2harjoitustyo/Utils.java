@@ -1,16 +1,20 @@
 package com.oh2harjoitustyo;
 
+import javafx.scene.paint.Color;
+
 public class Utils {
+    public static final String backGroundColor = "-fx-background-color: #030303";
+
     public static final double screenWidth = 1200;
     public static final double screenHeight = 800;
 
-    public static final double playerSizeBig = 40;
-    public static final double playerSizeSmall = 20;
+    public static final double playerSizeBig = 35;
+    public static final double playerSizeSmall = 17;
 
-    public static final double playerSpeedBig = 800;
-    public static final double playerSpeedSmall = 600;
+    public static final double playerSpeedBig = 600;
+    public static final double playerSpeedSmall = 450;
 
-    public static final double maxEnergy = 1000;
+    public static final double maxEnergy = 2000;
 
     public static final int maxHighScores = 10;
 
