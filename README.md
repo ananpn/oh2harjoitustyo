@@ -4,6 +4,7 @@ Controls: arrow keys to move character, shift to become smaller :o
 
 
 How to run with IntelliJ IDEA: 
+
 0. (Install git)
 1. Go to the folder you want to place this project folder
 2. Open terminal (for example, in Windows File Manager: File -> Open Powershell)
