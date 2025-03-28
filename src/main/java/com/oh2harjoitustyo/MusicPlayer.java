@@ -18,6 +18,7 @@ public class MusicPlayer {
         path += randomNum + ".mp3";
         Media media = new Media(new File(path).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
         mediaPlayer.play();
         mediaPlayer.setOnEndOfMedia(() ->
             playGameMusic()
@@ -35,6 +36,7 @@ public class MusicPlayer {
         stopMusic();
         Media media = new Media(new File("src/main/resources/com/oh2harjoitustyo/MenuMusic.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
         mediaPlayer.play();
         mediaPlayer.setOnEndOfMedia(() ->
             playMenuMusic()
