@@ -19,6 +19,9 @@ public class MusicPlayer {
         Media media = new Media(new File(path).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        mediaPlayer.setOnEndOfMedia(() ->
+            playGameMusic()
+        );
     }
 
     public static void stopMusic(){
@@ -33,6 +36,9 @@ public class MusicPlayer {
         Media media = new Media(new File("src/main/resources/com/oh2harjoitustyo/MenuMusic.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        mediaPlayer.setOnEndOfMedia(() ->
+            playMenuMusic()
+        );
     }
 
     public static boolean isPlaying(){
