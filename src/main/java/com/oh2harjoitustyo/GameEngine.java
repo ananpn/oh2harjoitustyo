@@ -31,8 +31,6 @@ public class GameEngine {
     private double baseScore = 0;
     private SimpleStringProperty scoreTextProperty = new SimpleStringProperty();
 
-    //private int nextSpecialAttackBaseScore = 23;
-    private double nextSpecialAttackBaseScore = 23;
 
     private AnimationTimer gameLoop;
 
@@ -112,18 +110,13 @@ public class GameEngine {
                 if (timeSinceLastSpawn >= spawnIntervalMillis ) {
                     timeSinceLastSpawn = 0;
                     addEnemy(new Pallo(
-                        30 + 25*random.nextDouble()+30*diff,
+                        30 + 25*random.nextDouble()+60*diff,
                         1.15*gamePane.getHeight()*(random.nextDouble()-0.5), 380+300*random.nextDouble()+400*diff
                     ));
 
                 }
-                if (baseScore >= nextSpecialAttackBaseScore) {
-                    shootInAPattern();
-                    nextSpecialAttackBaseScore += 33; // Time to next spread
-                }
 
-
-                spawnIntervalMillis = Utils.originalSpawnInterval - 220*diff;
+                spawnIntervalMillis = Utils.originalSpawnInterval - 170*diff;
                 enemies.removeIf(entity -> entity.isOutOfBoundsLeft());
 
 
@@ -169,8 +162,14 @@ public class GameEngine {
             player.xPosition.set(
                 Utils.clampToScreenHorizontal(player.xPosition.get() + moveAmount, Utils.playerSizeBig)
             );
-        if (pressedKeys.contains(KeyCode.SPACE))
-            System.out.println(calculateDifficultyCoefficient());
+        /*
+        if (pressedKeys.contains(KeyCode.SPACE)){
+            System.out.println("difficulty: " + calculateDifficultyCoefficient());
+            System.out.println("spawn interval: " + spawnIntervalMillis);
+            System.out.println("average size: " + (30 + 12.5+60*calculateDifficultyCoefficient()));
+            System.out.println("average speed: " + (380+150+400*calculateDifficultyCoefficient()));
+        }
+        */
     }
 
 
@@ -179,44 +178,6 @@ public class GameEngine {
             entity.updateMovement(deltaTime, baseScore);
         }
         checkCollisions();
-    }
-
-    private void shootInAPattern() {
-        int numEnemies = 55;
-        double baseSpeed = 650;
-
-        Timeline timeline = new Timeline();
-        int oscillationCount = 2;
-
-        for (int i = -numEnemies / 2; i <= numEnemies / 2; i++) {
-            double originalX = Utils.screenWidth / 2;
-            double progress = (double) (i + numEnemies / 2) / numEnemies;
-            double oscillationProgress = progress * oscillationCount;
-            double originalY;
-            double phase = oscillationProgress % 1.0;
-            if (phase < 0.5) {
-                // Move from top to bottom
-                originalY = -Utils.screenHeight / 2 + phase * 2 * Utils.screenHeight;
-            } else {
-                // Move from bottom to top
-                originalY = Utils.screenHeight / 2 - (phase - 0.5) * 2 * Utils.screenHeight;
-            }
-
-            int index = i;
-            KeyFrame keyFrame = new KeyFrame(Duration.millis(200 * (index + numEnemies / 2)), event ->
-                Platform.runLater(() ->{
-                    double angle = Math.atan2(player.yPosition.getValue() - originalY, player.xPosition.getValue() - originalX);
-                    double speedX = baseSpeed * Math.cos(angle);
-                    double speedY = baseSpeed * Math.sin(angle);
-                    addEnemy(new Projectile(7d, originalX, originalY, speedX, speedY));
-                    }
-                )
-            );
-
-            timeline.getKeyFrames().add(keyFrame);
-        }
-
-        timeline.play();
     }
 
 
@@ -242,7 +203,6 @@ public class GameEngine {
 
 
     private void onDeath(){
-        System.out.println(spawnIntervalMillis);
         double finalScore = ScoreSerialized.baseScoreToActualScore(baseScore);
         gameLoop.stop();
 
@@ -255,7 +215,7 @@ public class GameEngine {
     }
 
     private double calculateDifficultyCoefficient(){
-        return 0.75*(1-Math.exp(-baseScore/1500.0));
+        return 0.75*(1-Math.exp(-baseScore/800.0));
 
     }
 }

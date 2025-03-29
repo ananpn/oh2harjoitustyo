@@ -17,7 +17,7 @@ public class Utils {
 
     public static final double maxEnergy = 2000;
 
-    public static final double originalSpawnInterval = 140;
+    public static final double originalSpawnInterval = 115;
 
     public static final int maxHighScores = 10;
 

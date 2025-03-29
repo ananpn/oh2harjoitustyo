@@ -33,15 +33,15 @@ public class GameScreen  {
         StackPane layout = new StackPane();
         layout.setStyle(backGroundColor);
         StackPane topBar = new StackPane();
-        topBar.setMinSize(Utils.screenWidth, 100);
-        topBar.setMaxSize(Utils.screenWidth, 100);
+        topBar.setMinSize(Utils.screenWidth, 140);
+        topBar.setMaxSize(Utils.screenWidth, 140);
         topBar.setStyle(backGroundBarColor);
         layout.getChildren().add(topBar);
         topBar.setTranslateY(Utils.screenHeight/2);
 
         StackPane bottomBar = new StackPane();
-        bottomBar.setMinSize(Utils.screenWidth, 100);
-        bottomBar.setMaxSize(Utils.screenWidth, 100);
+        bottomBar.setMinSize(Utils.screenWidth, 140);
+        bottomBar.setMaxSize(Utils.screenWidth, 140);
         bottomBar.setStyle(backGroundBarColor);
         layout.getChildren().add(bottomBar);
         bottomBar.setTranslateY(-Utils.screenHeight/2);
