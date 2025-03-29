@@ -32,7 +32,7 @@ public class GameEngine {
     private SimpleStringProperty scoreTextProperty = new SimpleStringProperty();
 
     //private int nextSpecialAttackBaseScore = 23;
-    private int nextSpecialAttackBaseScore = 23;
+    private double nextSpecialAttackBaseScore = 23;
 
     private AnimationTimer gameLoop;
 
@@ -40,7 +40,7 @@ public class GameEngine {
     private SimpleDoubleProperty energy = new SimpleDoubleProperty(1);
 
     private double timeSinceLastSpawn = 0;
-    private double spawnIntervalMillis = 120;
+    private double spawnIntervalMillis = Utils.originalSpawnInterval;
 
 
     // Keeps track of currently pressed keys
@@ -112,18 +112,18 @@ public class GameEngine {
                 if (timeSinceLastSpawn >= spawnIntervalMillis ) {
                     timeSinceLastSpawn = 0;
                     addEnemy(new Pallo(
-                        25 + 30*random.nextDouble()+30*diff,
-                        1.15*gamePane.getHeight()*(random.nextDouble()-0.5), 400+300*random.nextDouble()+400*diff
+                        30 + 25*random.nextDouble()+30*diff,
+                        1.15*gamePane.getHeight()*(random.nextDouble()-0.5), 380+300*random.nextDouble()+400*diff
                     ));
 
                 }
                 if (baseScore >= nextSpecialAttackBaseScore) {
                     shootInAPattern();
-                    nextSpecialAttackBaseScore += 25; // Move to the next milestone
+                    nextSpecialAttackBaseScore += 33; // Time to next spread
                 }
 
 
-                spawnIntervalMillis = 100 - 200*diff;
+                spawnIntervalMillis = Utils.originalSpawnInterval - 220*diff;
                 enemies.removeIf(entity -> entity.isOutOfBoundsLeft());
 
 
@@ -182,20 +182,17 @@ public class GameEngine {
     }
 
     private void shootInAPattern() {
-        int numEnemies = 50;
-        double baseSpeed = 800;
+        int numEnemies = 55;
+        double baseSpeed = 650;
 
         Timeline timeline = new Timeline();
         int oscillationCount = 2;
 
         for (int i = -numEnemies / 2; i <= numEnemies / 2; i++) {
             double originalX = Utils.screenWidth / 2;
-            // Calculate the oscillating originalY based on the index i
             double progress = (double) (i + numEnemies / 2) / numEnemies;
             double oscillationProgress = progress * oscillationCount;
             double originalY;
-
-            // Determine the phase of the oscillation
             double phase = oscillationProgress % 1.0;
             if (phase < 0.5) {
                 // Move from top to bottom
@@ -211,7 +208,7 @@ public class GameEngine {
                     double angle = Math.atan2(player.yPosition.getValue() - originalY, player.xPosition.getValue() - originalX);
                     double speedX = baseSpeed * Math.cos(angle);
                     double speedY = baseSpeed * Math.sin(angle);
-                    addEnemy(new Projectile(8d, originalX, originalY, speedX, speedY));
+                    addEnemy(new Projectile(7d, originalX, originalY, speedX, speedY));
                     }
                 )
             );

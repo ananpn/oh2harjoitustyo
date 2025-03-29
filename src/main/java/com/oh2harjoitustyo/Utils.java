@@ -9,13 +9,15 @@ public class Utils {
     public static final double screenWidth = 1200;
     public static final double screenHeight = 800;
 
-    public static final double playerSizeBig = 18;
-    public static final double playerSizeSmall = 9;
+    public static final double playerSizeBig = 16;
+    public static final double playerSizeSmall = 8;
 
-    public static final double playerSpeedBig = 580;
+    public static final double playerSpeedBig = 550;
     public static final double playerSpeedSmall = 400;
 
     public static final double maxEnergy = 2000;
+
+    public static final double originalSpawnInterval = 140;
 
     public static final int maxHighScores = 10;
 

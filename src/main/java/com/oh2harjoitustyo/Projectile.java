@@ -36,8 +36,8 @@ public class Projectile extends Entity {
         int randomInt = random.nextInt(0, colors.size());
         Color randomColor = colors.get(randomInt);
 
-        shape.setFill(Color.CHARTREUSE);
-        shape.setStroke(Color.CHARTREUSE);
+        shape.setFill(Color.ORANGERED);
+        shape.setStroke(Color.ORANGE);
 
         shape.translateXProperty().bind(xPosition);
         shape.translateYProperty().bind(yPosition);
