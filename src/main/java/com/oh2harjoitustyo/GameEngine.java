@@ -1,6 +1,9 @@
 package com.oh2harjoitustyo;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
@@ -9,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.*;
 
@@ -27,13 +31,16 @@ public class GameEngine {
     private double baseScore = 0;
     private SimpleStringProperty scoreTextProperty = new SimpleStringProperty();
 
+    //private int nextSpecialAttackBaseScore = 23;
+    private int nextSpecialAttackBaseScore = 23;
+
     private AnimationTimer gameLoop;
 
 
     private SimpleDoubleProperty energy = new SimpleDoubleProperty(1);
 
     private double timeSinceLastSpawn = 0;
-    private double spawnIntervalMillis = 100;
+    private double spawnIntervalMillis = 120;
 
 
     // Keeps track of currently pressed keys
@@ -106,10 +113,17 @@ public class GameEngine {
                     timeSinceLastSpawn = 0;
                     addEnemy(new Pallo(
                         25 + 30*random.nextDouble()+30*diff,
-                        1.1*gamePane.getHeight()*(random.nextDouble()-0.5), 450+300*random.nextDouble()+400*diff
+                        1.15*gamePane.getHeight()*(random.nextDouble()-0.5), 400+300*random.nextDouble()+400*diff
                     ));
 
                 }
+                if (baseScore >= nextSpecialAttackBaseScore) {
+                    shootInAPattern();
+                    nextSpecialAttackBaseScore += 25; // Move to the next milestone
+                }
+
+
+                spawnIntervalMillis = 100 - 200*diff;
                 enemies.removeIf(entity -> entity.isOutOfBoundsLeft());
 
 
@@ -162,16 +176,51 @@ public class GameEngine {
 
     private void updateEnemiesMovement(double deltaTime) {
         for (Entity entity : enemies) {
-            entity.updateMovement(deltaTime, entity.speed, baseScore);
+            entity.updateMovement(deltaTime, baseScore);
         }
         checkCollisions();
     }
 
-    private void shootInAPattern(){
+    private void shootInAPattern() {
+        int numEnemies = 50;
+        double baseSpeed = 800;
 
+        Timeline timeline = new Timeline();
+        int oscillationCount = 2;
 
+        for (int i = -numEnemies / 2; i <= numEnemies / 2; i++) {
+            double originalX = Utils.screenWidth / 2;
+            // Calculate the oscillating originalY based on the index i
+            double progress = (double) (i + numEnemies / 2) / numEnemies;
+            double oscillationProgress = progress * oscillationCount;
+            double originalY;
+
+            // Determine the phase of the oscillation
+            double phase = oscillationProgress % 1.0;
+            if (phase < 0.5) {
+                // Move from top to bottom
+                originalY = -Utils.screenHeight / 2 + phase * 2 * Utils.screenHeight;
+            } else {
+                // Move from bottom to top
+                originalY = Utils.screenHeight / 2 - (phase - 0.5) * 2 * Utils.screenHeight;
+            }
+
+            int index = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(200 * (index + numEnemies / 2)), event ->
+                Platform.runLater(() ->{
+                    double angle = Math.atan2(player.yPosition.getValue() - originalY, player.xPosition.getValue() - originalX);
+                    double speedX = baseSpeed * Math.cos(angle);
+                    double speedY = baseSpeed * Math.sin(angle);
+                    addEnemy(new Projectile(8d, originalX, originalY, speedX, speedY));
+                    }
+                )
+            );
+
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        timeline.play();
     }
-
 
 
 
@@ -193,29 +242,10 @@ public class GameEngine {
     }
 
 
-    /**
-     * Removes enemies that are beyond the screen
-     */
-    private void removeOldEnemies(){
-        //System.out.println("Removing old enemies");
-        //System.out.println("number of enemies: " + enemies.size());
-        List<Entity> enemiesToRemove = new ArrayList<>();
-        for (Entity entity : enemies) {
-            if (entity.xPosition.getValue() < -Utils.screenWidth){
-                enemiesToRemove.add(entity);
-            }
-        }
-        enemies.removeAll(enemiesToRemove);
-        enemiesToRemove.forEach(enemy ->
-                gamePane.getChildren().remove(enemy.shape)
-        );
-    }
-
-
-
 
 
     private void onDeath(){
+        System.out.println(spawnIntervalMillis);
         double finalScore = ScoreSerialized.baseScoreToActualScore(baseScore);
         gameLoop.stop();
 

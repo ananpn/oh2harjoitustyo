@@ -21,7 +21,7 @@ abstract class Entity {
         return shape;
     }
 
-    public void updateMovement(double deltaTime, double speed, double baseScore) {
+    public void updateMovement(double deltaTime, double baseScore) {
 
     }
 

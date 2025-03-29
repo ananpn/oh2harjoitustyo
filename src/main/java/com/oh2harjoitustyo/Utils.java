@@ -9,17 +9,16 @@ public class Utils {
     public static final double screenWidth = 1200;
     public static final double screenHeight = 800;
 
-    public static final double playerSizeBig = 20;
-    public static final double playerSizeSmall = 10;
+    public static final double playerSizeBig = 18;
+    public static final double playerSizeSmall = 9;
 
-    public static final double playerSpeedBig = 600;
-    public static final double playerSpeedSmall = 450;
+    public static final double playerSpeedBig = 580;
+    public static final double playerSpeedSmall = 400;
 
     public static final double maxEnergy = 2000;
 
     public static final int maxHighScores = 10;
 
-    public static int ballId = 0;
 
     public static double clampToScreen(double value){
         return Math.clamp(value, 0, screenWidth);

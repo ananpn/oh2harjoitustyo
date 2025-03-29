@@ -56,7 +56,7 @@ public class ScoreSerialized implements Serializable {
     }
 
     public static int baseScoreToActualScore(double score) {
-        return (int) (10 * (int) (score * 10000d)/250d);
+        return (int) (score * 400d);
     }
     
     static Comparator <ScoreSerialized> comparator = new Comparator() {

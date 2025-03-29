@@ -10,7 +10,6 @@ import java.util.Random;
 
 // enemy
 public class Pallo extends Entity {
-    public int id = 0;
 
     public boolean yUp = false;
 
@@ -18,9 +17,6 @@ public class Pallo extends Entity {
 
 
     public Pallo(double radius, double originalY, double speed){
-
-        id = Utils.ballId;
-        Utils.ballId++;
 
 
 
@@ -70,7 +66,7 @@ public class Pallo extends Entity {
     }
 
     @Override
-    public void updateMovement(double deltaTime, double speed, double score) {
+    public void updateMovement(double deltaTime, double score) {
         double moveAmountX = speed * deltaTime;
         xPosition.set(xPosition.get() - moveAmountX);
         if (score > 5.0) {
