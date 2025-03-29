@@ -25,4 +25,8 @@ abstract class Entity {
 
     }
 
+    public boolean isOutOfBoundsLeft() {
+        return xPosition.getValue() < -Utils.screenWidth/1.5;
+    }
+
 }

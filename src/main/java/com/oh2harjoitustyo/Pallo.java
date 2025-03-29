@@ -10,11 +10,20 @@ import java.util.Random;
 
 // enemy
 public class Pallo extends Entity {
+    public int id = 0;
 
     public boolean yUp = false;
 
+    private double sinPhase = 1;
+
 
     public Pallo(double radius, double originalY, double speed){
+
+        id = Utils.ballId;
+        Utils.ballId++;
+
+
+
         this.speed = speed;
         if (System.currentTimeMillis()%2 == 0){
             yUp = true;
@@ -38,11 +47,20 @@ public class Pallo extends Entity {
             Color.rgb(255,0,128)
         );
         Random random = new Random();
-        Color randomColor = colors.get(random.nextInt(0, colors.size()));
+        int randomInt = random.nextInt(0, colors.size());
+        Color randomColor = colors.get(randomInt);
 
         shape.setFill(randomColor);
         shape.setStroke(randomColor);
 
+        sinPhase = switch(randomInt) {
+            case 0 -> 0.4;
+            case 1 -> 0.1;
+            case 2 -> 0.7;
+            case 3 -> 1;
+            case 4 -> 2;
+            default -> throw new IllegalStateException("Unexpected value: " + randomInt);
+        };
 
         shape.translateXProperty().bind(xPosition);
         shape.translateYProperty().bind(yPosition);
@@ -55,9 +73,12 @@ public class Pallo extends Entity {
     public void updateMovement(double deltaTime, double speed, double score) {
         double moveAmountX = speed * deltaTime;
         xPosition.set(xPosition.get() - moveAmountX);
-        double moveAmountY = 20;
-        if (yUp) moveAmountY = -20;
-        yPosition.set(yPosition.get() + Math.sin(score/1000.0)*moveAmountY);
+        if (score > 5.0) {
+            double moveAmountY = 0.2 * speed  * deltaTime * (1 - Math.exp(-(score-5)/10));
+            if (yUp) moveAmountY = -0.2 * speed * deltaTime * (1 - Math.exp(-(score-5)/10));
+            yPosition.set(yPosition.get() + moveAmountY * Math.sin(score * sinPhase));
+        }
     }
+
 
 }

@@ -20,7 +20,6 @@ public class GameEngine {
 
     private final Pane gamePane; // The root pane
     private long lastUpdate = 0; // Last frame time in milliseconds
-    private boolean isModifying = false; // To not modify lists at the same time in two different places
 
     private final List<Entity> enemies = new ArrayList<>();
     private final Player player;
@@ -33,11 +32,21 @@ public class GameEngine {
 
     private SimpleDoubleProperty energy = new SimpleDoubleProperty(1);
 
+    private double timeSinceLastSpawn = 0;
+    private double spawnIntervalMillis = 100;
+
 
     // Keeps track of currently pressed keys
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
 
+    /** Constructs the GameEngine.
+     * @param gamePane Pane where the game is drawn.
+     * @param sceneManager The SceneManager of the whole project.
+     *
+     *
+     *
+     */
     public GameEngine(Pane gamePane, SceneManager sceneManager) {
         this.player = new Player();
         this.gamePane = gamePane;
@@ -52,16 +61,22 @@ public class GameEngine {
         ProgressBar energyBar = new ProgressBar();
         energyBar.progressProperty().bind(energy);
         energyBar.setVisible(true);
-        energyBar.setTranslateY(-90+Utils.screenHeight/2);
+        energyBar.setTranslateY(-40+Utils.screenHeight/2);
         gamePane.getChildren().add(energyBar);
     }
 
 
-    public void addEntity(Entity entity) {
+    /** Adds an enemy to the game.
+     * @param entity The enemy Entity to add to GameEngine.gamePane and the List<Entity> enemies.
+     */
+    public void addEnemy(Entity entity) {
         enemies.add(entity);
         gamePane.getChildren().add(entity.getShape()); // Add to pane
     }
 
+    /**
+     * @param scene Scene where the game is drawn.
+     */
     public void start(Scene scene) {
         Random random = new Random();
         scene.setOnKeyPressed(event -> {
@@ -86,20 +101,16 @@ public class GameEngine {
                 scoreTextProperty.set(String.valueOf(ScoreSerialized.baseScoreToActualScore(baseScore)));
                 double diff = calculateDifficultyCoefficient();
 
-                if (random.nextDouble() > 0.90-diff && !isModifying) {
-                    isModifying = true;
-                    addEntity(new Pallo(
+                timeSinceLastSpawn += deltaTime;
+                if (timeSinceLastSpawn >= spawnIntervalMillis ) {
+                    timeSinceLastSpawn = 0;
+                    addEnemy(new Pallo(
                         25 + 30*random.nextDouble()+30*diff,
-                        gamePane.getHeight()*(random.nextDouble()-0.5), 450+300*random.nextDouble()+400*diff
+                        1.1*gamePane.getHeight()*(random.nextDouble()-0.5), 450+300*random.nextDouble()+400*diff
                     ));
-                    isModifying = false;
 
                 }
-                else if (random.nextDouble() > 0.999 && !isModifying) {
-                    isModifying = true;
-                    removeOldEnemies();
-                    isModifying = false;
-                }
+                enemies.removeIf(entity -> entity.isOutOfBoundsLeft());
 
 
                 updatePlayerMovement(deltaTime/1000.0);
@@ -109,6 +120,9 @@ public class GameEngine {
         gameLoop.start();
     }
 
+    /** Checks pressed keys and updates the state of the game accordingly.
+     * @param deltaTime Time since last update in milliseconds.
+     */
     protected void updatePlayerMovement(double deltaTime) {
         double moveAmount = player.speed * deltaTime;
         if (pressedKeys.contains(KeyCode.SHIFT) && energy.get() > 0) {
@@ -141,6 +155,8 @@ public class GameEngine {
             player.xPosition.set(
                 Utils.clampToScreenHorizontal(player.xPosition.get() + moveAmount, Utils.playerSizeBig)
             );
+        if (pressedKeys.contains(KeyCode.SPACE))
+            System.out.println(calculateDifficultyCoefficient());
     }
 
 
@@ -149,6 +165,11 @@ public class GameEngine {
             entity.updateMovement(deltaTime, entity.speed, baseScore);
         }
         checkCollisions();
+    }
+
+    private void shootInAPattern(){
+
+
     }
 
 
@@ -176,6 +197,8 @@ public class GameEngine {
      * Removes enemies that are beyond the screen
      */
     private void removeOldEnemies(){
+        //System.out.println("Removing old enemies");
+        //System.out.println("number of enemies: " + enemies.size());
         List<Entity> enemiesToRemove = new ArrayList<>();
         for (Entity entity : enemies) {
             if (entity.xPosition.getValue() < -Utils.screenWidth){

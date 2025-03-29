@@ -14,6 +14,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
+
         stage.setResizable(false);
         stage.setMaxHeight(Utils.screenHeight);
         stage.setMaxWidth(Utils.screenWidth);
