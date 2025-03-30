@@ -5,8 +5,8 @@ module com.oh2harjoitustyo {
     requires javafx.media;
 
 
-    opens com.oh2harjoitustyo to javafx.fxml;
+    opens com.oh2harjoitustyo to javafx.fxml, javafx.media;
     exports com.oh2harjoitustyo;
     exports com.oh2harjoitustyo.Screens;
-    opens com.oh2harjoitustyo.Screens to javafx.fxml;
+    opens com.oh2harjoitustyo.Screens to javafx.fxml, javafx.media;
 }
