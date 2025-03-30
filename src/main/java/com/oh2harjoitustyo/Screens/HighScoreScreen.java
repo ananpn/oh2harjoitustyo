@@ -12,12 +12,24 @@ import javafx.scene.text.Text;
 
 import static com.oh2harjoitustyo.Utils.backGroundColor;
 
-public class HighScoreScreen  {
+public class HighScoreScreen  implements ScreenInterface {
+    Pane screen;
 
-    HighScoresManager highScoresManager = new HighScoresManager();
+    SceneManager sceneManager;
+
+    public Pane getScreen() {
+        return screen;
+    }
+
+    /** Constructor, sets HighScoreScreen.sceneManager
+     * @param sceneManager The common project SceneManager
+     */
+    public HighScoreScreen(SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
+    }
 
 
-    public Pane createScreen(SceneManager sceneManager){
+    public void createScreen(){
         StackPane layout = new StackPane();
         layout.setStyle(backGroundColor);
         layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
@@ -31,10 +43,10 @@ public class HighScoreScreen  {
 
         VBox highScoresBox = new VBox();
 
-        highScoresManager.initializeHighScores();
-        highScoresManager.readHighScores();
-        if (highScoresManager.highScores != null) {
-            highScoresManager.highScores.forEach( highScore -> {
+        HighScoresManager.initializeHighScores();
+        HighScoresManager.readHighScores();
+        if (HighScoresManager.highScores != null) {
+            HighScoresManager.highScores.forEach( highScore -> {
                 Text highScoreText = new Text(highScore.getScore() + " " + highScore.getPlayerName());
                 highScoreText.setStroke(Color.CYAN);
                 highScoresBox.getChildren().add(highScoreText);
@@ -53,8 +65,17 @@ public class HighScoreScreen  {
         });
         layout.getChildren().add(backButton);
 
+        Button clearButton = new Button("Clear High Scores");
+        clearButton.setTranslateX(450);
+        clearButton.setTranslateY(-40 + Utils.screenHeight/2);
+        clearButton.setOnAction(e -> {
+            HighScoresManager.clearHighScores();
+            highScoresBox.getChildren().clear();
+        });
+        layout.getChildren().add(clearButton);
 
-        return layout;
+
+        screen = layout;
 
 
 

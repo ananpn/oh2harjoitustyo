@@ -26,7 +26,9 @@ public class SceneManager {
 
     public void showMainMenu() {
         MusicPlayer.playMenuMusic();
-        setScene(new MainMenuScreen().createScreen(this));
+        MainMenuScreen mainMenuScreen = new MainMenuScreen(this);
+        mainMenuScreen.createScreen();
+        setScene(mainMenuScreen.getScreen());
         stage.setTitle("Main Menu");
     }
 
@@ -40,14 +42,17 @@ public class SceneManager {
     }
 
     public void showGameOverScreen(double finalScore) {
-        GameOverScreen gameOverScreen = new GameOverScreen();
+        GameOverScreen gameOverScreen = new GameOverScreen(this);
         gameOverScreen.setFinalScore(finalScore);
-        setScene(gameOverScreen.createScreen(this));
+        gameOverScreen.createScreen();
+        setScene(gameOverScreen.getScreen());
         stage.setTitle("Game Over");
     }
 
     public void showHighScoreScreen() {
-        setScene(new HighScoreScreen().createScreen(this));
+        HighScoreScreen highScoreScreen = new HighScoreScreen(this);
+        highScoreScreen.createScreen();
+        setScene(highScoreScreen.getScreen());
         stage.setTitle("High Scores");
     }
 }

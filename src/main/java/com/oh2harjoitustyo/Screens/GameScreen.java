@@ -1,35 +1,51 @@
 package com.oh2harjoitustyo.Screens;
 
 import com.oh2harjoitustyo.GameEngine;
-import com.oh2harjoitustyo.MusicPlayer;
 import com.oh2harjoitustyo.SceneManager;
 import com.oh2harjoitustyo.Utils;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaPlayer;
 
 import static com.oh2harjoitustyo.Utils.backGroundBarColor;
 import static com.oh2harjoitustyo.Utils.backGroundColor;
 
 
-public class GameScreen  {
+public class GameScreen implements ScreenInterface {
 
+
+    /**
+     * SceneManager, should be the common project SceneManager
+     */
     private SceneManager sceneManager;
 
+
+    /**
+     * Screen for drawing the game
+     */
     public Pane screen;
 
+    /** Constructor, sets GameScreen.sceneManager
+     * @param sceneManager The common project SceneManager
+     */
     public GameScreen(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
     }
 
+
+    /** Returns the Pane where the game is drawn
+     * @return returns GameScreen.screen
+     */
     public Pane getScreen(){
         return screen;
     }
 
 
+    /**
+     * Creates the StackPane for drawing the game
+     */
     public void createScreen(){
+
         StackPane layout = new StackPane();
         layout.setStyle(backGroundColor);
         StackPane topBar = new StackPane();
@@ -51,6 +67,9 @@ public class GameScreen  {
 
     }
 
+    /** Starts the GameEngine
+     * @param scene Scene object, where the game is drawn
+     */
     public void startGame(Scene scene){
         GameEngine gameEngine = new GameEngine(screen, sceneManager);
         gameEngine.start(scene);

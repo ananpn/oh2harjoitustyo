@@ -1,10 +1,8 @@
 package com.oh2harjoitustyo.Screens;
 import com.oh2harjoitustyo.HighScoresManager;
-import com.oh2harjoitustyo.MusicPlayer;
 import com.oh2harjoitustyo.SceneManager;
 import com.oh2harjoitustyo.Utils;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -14,10 +12,22 @@ import javafx.scene.text.Text;
 
 import static com.oh2harjoitustyo.Utils.backGroundColor;
 
-public class MainMenuScreen {
+public class MainMenuScreen implements ScreenInterface {
+    Pane screen;
+
+    SceneManager sceneManager;
+
+    public Pane getScreen() {
+        return screen;
+    }
+
+    public MainMenuScreen(SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
+    }
 
 
-    public Pane createScreen(SceneManager sceneManager){
+    public void createScreen(){
+        this.sceneManager = sceneManager;
         HighScoresManager.initializeHighScores();
 
 
@@ -55,8 +65,7 @@ public class MainMenuScreen {
 
         menuBox.getChildren().addAll(newGameButton, highScoresButton, exitButton);
         layout.getChildren().add(menuBox);
-
-        return layout;
+        screen = layout;
 
 
 

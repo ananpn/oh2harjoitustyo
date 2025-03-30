@@ -12,6 +12,9 @@ public class MainApp extends Application {
         launch(args);
     }
 
+    /** Starts the app. First shows main menu.
+     * @param stage Root stage
+     */
     @Override
     public void start(Stage stage) {
 

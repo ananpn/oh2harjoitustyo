@@ -8,8 +8,16 @@ import java.util.List;
 
 public class HighScoresManager {
 
+
+    /**
+     * High scores as list
+     */
     public static List<ScoreSerialized> highScores;
 
+
+    /**
+     * Initializes the high score list in this class and creates an empty file
+     */
     public static void initializeHighScores() {
         if (!doesFileExist()){
             highScores = new ArrayList<ScoreSerialized>();
@@ -17,6 +25,11 @@ public class HighScoresManager {
         }
     }
 
+
+    /** Checks if a score can be placed in the high scores
+     * @param newScoreDouble New score to check
+     * @return Returns true, if the new score belongs in the high scores, and false, if not.
+     */
     public boolean checkNewScore(double newScoreDouble) {
         readHighScores();
         ScoreSerialized newScore = new ScoreSerialized(
@@ -58,13 +71,15 @@ public class HighScoresManager {
 
     }
 
+    /**
+     * Saves HighScoreManager.highScores to file highscores.dat located in project root.
+     */
     public static void saveHighScores() {
         try(
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("highscores.dat"))
         ){
             highScores.sort(ScoreSerialized.comparator);
             outputStream.writeObject(highScores);
-            System.out.println("Highscores saved");
             //tätä ei tarvitse
             //outputStream.close();
         }
@@ -77,6 +92,9 @@ public class HighScoresManager {
 
     }
 
+    /**
+     * Reads HighScoreManager.highScores from file highscores.dat located in project root
+     */
     public static void readHighScores() {
         initializeHighScores();
         try(
@@ -100,8 +118,18 @@ public class HighScoresManager {
 
     }
 
+
+    /** Checks if the file highscores.dat exists in project root
+     * @return true, if highscores.dat exists in project root, false otherwise
+     */
     public static boolean doesFileExist(){
         File file = new File("highscores.dat");
         return file.exists();
+    }
+
+
+    public static void clearHighScores(){
+        highScores.clear();
+        saveHighScores();
     }
 }

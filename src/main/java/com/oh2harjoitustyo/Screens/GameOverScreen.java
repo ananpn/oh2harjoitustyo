@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 import java.time.Instant;
 import java.util.Date;
 
-public class GameOverScreen {
+public class GameOverScreen implements ScreenInterface {
     private double finalScore;
 
     public void setFinalScore(double finalScore) {
@@ -24,8 +24,24 @@ public class GameOverScreen {
 
     HighScoresManager highScoresManager = new HighScoresManager();
 
+    Pane screen;
 
-    public Pane createScreen(SceneManager sceneManager){
+    SceneManager sceneManager;
+
+    public GameOverScreen(SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
+    }
+
+    public Pane getScreen() {
+        return screen;
+    }
+
+
+    /**
+     * Creates the Game Over -screen on a StackPane object and returns it.
+     * @return StackPane containing the Game Over -screen
+     */
+    public void createScreen(){
         StackPane layout = new StackPane();
         layout.setStyle("-fx-background-color: #030303");
         layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
@@ -57,7 +73,17 @@ public class GameOverScreen {
             givePlayerName.setTranslateY(150);
             TextField playerNameField = new TextField("");
             playerNameField.requestFocus();
+
             Button doneButton = new Button("Done");
+            doneButton.setOnAction(e -> {
+                playerNameProperty.setValue(playerNameField.getText());
+                highScoresManager.saveNewScore(new ScoreSerialized(
+                    (int) Math.round(finalScore),
+                    playerNameProperty.getValue(),
+                    Date.from(Instant.now())
+                ));
+                sceneManager.showMainMenu();
+            });
 
 
             nameBox.setAlignment(Pos.CENTER);
@@ -68,15 +94,7 @@ public class GameOverScreen {
             layout.getChildren().add(givePlayerName);
             layout.getChildren().add(newScoreText);
 
-            doneButton.setOnAction(e -> {
-                playerNameProperty.setValue(playerNameField.getText());
-                highScoresManager.saveNewScore(new ScoreSerialized(
-                    (int) Math.round(finalScore),
-                    playerNameProperty.getValue(),
-                    Date.from(Instant.now())
-                ));
-                sceneManager.showMainMenu();
-            });
+
 
 
         };
@@ -90,7 +108,7 @@ public class GameOverScreen {
         layout.getChildren().add(backButton);
 
 
-        return layout;
+        screen = layout;
 
 
 
