@@ -1,9 +1,7 @@
 package com.oh2harjoitustyo;
 
 import java.io.*;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class HighScoresManager {
@@ -30,13 +28,8 @@ public class HighScoresManager {
      * @param newScoreDouble New score to check
      * @return Returns true, if the new score belongs in the high scores, and false, if not.
      */
-    public boolean checkNewScore(double newScoreDouble) {
+    public static boolean checkNewScore(double newScoreDouble) {
         readHighScores();
-        ScoreSerialized newScore = new ScoreSerialized(
-                (int) Math.round(newScoreDouble),
-                "Default",
-                Date.from(Instant.now())
-        );
         highScores.sort(ScoreSerialized.comparator);
         if (highScores.size() < Utils.maxHighScores){
             return true;
@@ -47,7 +40,7 @@ public class HighScoresManager {
         return (highScores.getLast().getScore() < newScoreDouble);
     }
 
-    public void saveNewScore(ScoreSerialized newScore){
+    public static void saveNewScore(ScoreSerialized newScore){
 
         readHighScores();
         highScores.sort(ScoreSerialized.comparator);

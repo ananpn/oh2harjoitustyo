@@ -1,9 +1,6 @@
 package com.oh2harjoitustyo;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
@@ -12,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import java.util.*;
 
@@ -109,7 +105,7 @@ public class GameEngine {
                 timeSinceLastSpawn += deltaTime;
                 if (timeSinceLastSpawn >= spawnIntervalMillis ) {
                     timeSinceLastSpawn = 0;
-                    addEnemy(new Pallo(
+                    addEnemy(new Enemy(
                         30 + 25*random.nextDouble()+60*diff,
                         1.15*gamePane.getHeight()*(random.nextDouble()-0.5), 380+300*random.nextDouble()+400*diff
                     ));
@@ -181,16 +177,27 @@ public class GameEngine {
     }
 
 
-
-
+    /**
+     * Checks if GameEngine.player intersects any of the Enemy objects in the List enemies, and causes death if this happens
+     */
     private void checkCollisions() {
         for (Entity enemy : enemies) {
+            if (Utils.calculateDistanceSquared(enemy.xPosition.getValue(), enemy.yPosition.getValue(),
+                player.xPosition.getValue(), player.yPosition.getValue()) < Math.pow(player.size.getValue()+enemy.size.getValue()-5, 2)
+            ) {
+                onDeath();
+            }
+
+            /*
+            // probably less efficient
             if (Utils.calculateDistance(enemy.xPosition.getValue(), enemy.yPosition.getValue(),
                 player.xPosition.getValue(), player.yPosition.getValue()) < player.size.getValue()+enemy.size.getValue()-5
             ) {
                 onDeath();
             }
+            */
             /*
+            // probably less efficient
             if (enemy.getShape().getBoundsInParent().intersects(player.getShape().getBoundsInParent())) {
                 onDeath();
                 //System.out.println("Collision detected");

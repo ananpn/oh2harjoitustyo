@@ -1,12 +1,11 @@
 package com.oh2harjoitustyo.Screens;
 import com.oh2harjoitustyo.HighScoresManager;
 import com.oh2harjoitustyo.SceneManager;
+import com.oh2harjoitustyo.ScoreSerialized;
 import com.oh2harjoitustyo.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -47,9 +46,45 @@ public class HighScoreScreen  implements ScreenInterface {
         HighScoresManager.readHighScores();
         if (HighScoresManager.highScores != null) {
             HighScoresManager.highScores.forEach( highScore -> {
-                Text highScoreText = new Text(highScore.getScore() + " " + highScore.getPlayerName());
-                highScoreText.setStroke(Color.CYAN);
-                highScoresBox.getChildren().add(highScoreText);
+                HBox rowBox = new HBox();
+                Text scoreText = new Text(String.valueOf(highScore.getScore()));
+                Text nameText = new Text(highScore.getPlayerName());
+                Text dateText = new Text(highScore.dateToDisplayString());
+
+                scoreText.setStroke(Color.CYAN);
+                nameText.setStroke(Color.CYAN);
+                dateText.setStroke(Color.CYAN);
+
+                StackPane scoreBox = new StackPane();
+                scoreBox.getChildren().add(scoreText);
+                scoreBox.setAlignment(Pos.CENTER_RIGHT);
+                StackPane nameBox = new StackPane();
+                nameBox.getChildren().add(nameText);
+                nameBox.setAlignment(Pos.CENTER);
+                StackPane dateBox = new StackPane();
+                dateBox.getChildren().add(dateText);
+                dateBox.setAlignment(Pos.CENTER_LEFT);
+                scoreBox.setMinWidth(60);
+                nameBox.setMinWidth(120);
+                dateBox.setMinWidth(100);
+
+                HBox.setHgrow(scoreBox, Priority.ALWAYS);
+                HBox.setHgrow(nameBox, Priority.ALWAYS);
+                HBox.setHgrow(dateBox, Priority.ALWAYS);
+
+                //rowBox.add(scoreText, 0, 0);
+                //rowBox.add(nameText, 1, 0);
+                //rowBox.add(dateText, 2, 0);
+                rowBox.getChildren().addAll(scoreBox, nameBox, dateBox);
+                rowBox.setSpacing(10);
+                rowBox.setPrefWidth(280);
+                rowBox.setMinWidth(280);
+                rowBox.setMaxWidth(280);
+                rowBox.setAlignment(Pos.CENTER);
+                highScoresBox.getChildren().add(rowBox);
+                //Text highScoreText = new Text(highScore.getScore() + " " + highScore.getPlayerName() + " " + highScore.dateToDisplayString());
+                //highScoreText.setStroke(Color.CYAN);
+                //highScoresBox.getChildren().add(highScoreText);
 
             });
         }

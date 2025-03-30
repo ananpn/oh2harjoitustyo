@@ -1,8 +1,5 @@
 package com.oh2harjoitustyo;
 
-import com.oh2harjoitustyo.Screens.GameScreen;
-import com.oh2harjoitustyo.Screens.HighScoreScreen;
-import com.oh2harjoitustyo.Screens.MainMenuScreen;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

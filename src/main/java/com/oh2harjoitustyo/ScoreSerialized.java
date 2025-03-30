@@ -49,9 +49,9 @@ public class ScoreSerialized implements Serializable {
         stringBuilder.append(" ");
         stringBuilder.append(date.getDate());
         stringBuilder.append(".");
-        stringBuilder.append(date.getMonth());
+        stringBuilder.append(date.getMonth()+1);
         stringBuilder.append(".");
-        stringBuilder.append(date.getYear());
+        stringBuilder.append(date.getYear()+1900);
         return stringBuilder.toString();
     }
 

@@ -1,7 +1,5 @@
 package com.oh2harjoitustyo;
 
-import javafx.scene.paint.Color;
-
 public class Utils {
 
     public static final String backGroundColor = "-fx-background-color: #030303";
@@ -55,8 +53,21 @@ public class Utils {
      * @return Euclidean distance between the given points
      */
     public static double calculateDistance(double x1, double y1, double x2, double y2){
-        return Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+        return Math.sqrt(calculateDistanceSquared(x1, y1, x2, y2));
     }
+
+    /** Calculates the square of the Euclidean distance between two points (x1,y1) and (x2,y2), that is (x2-x1)^2 + (y2-y1)^2
+     * @param x1 1st x-coordinate
+     * @param y1 1st y-coordinate
+     * @param x2 2nd x-coordinate
+     * @param y2 2nd y-coordinate
+     * @return Square of the Euclidean distance between the given points (x1,y1) and (x2,y2), that is (x2-x1)^2 + (y2-y1)^2
+     */
+    public static double calculateDistanceSquared(double x1, double y1, double x2, double y2){
+        return Math.pow(x2-x1,2) + Math.pow(y2-y1,2);
+    }
+
+
 
 
 

@@ -1,11 +1,10 @@
 package com.oh2harjoitustyo.Screens;
 
 import com.oh2harjoitustyo.*;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -21,8 +20,6 @@ public class GameOverScreen implements ScreenInterface {
     public void setFinalScore(double finalScore) {
         this.finalScore = finalScore;
     }
-
-    HighScoresManager highScoresManager = new HighScoresManager();
 
     Pane screen;
 
@@ -59,10 +56,10 @@ public class GameOverScreen implements ScreenInterface {
         layout.getChildren().add(highScoreText);
         layout.getChildren().add(finalScoreText);
 
-        SimpleStringProperty playerNameProperty = new SimpleStringProperty("Antti");
 
-        highScoresManager.readHighScores();
-        if (highScoresManager.checkNewScore(finalScore)) {
+
+        HighScoresManager.readHighScores();
+        if (HighScoresManager.checkNewScore(finalScore)) {
             Text newScoreText = new Text("New High Score!");
             newScoreText.setStroke(Color.CHARTREUSE);
             newScoreText.setTranslateY(100);
@@ -76,13 +73,12 @@ public class GameOverScreen implements ScreenInterface {
 
             Button doneButton = new Button("Done");
             doneButton.setOnAction(e -> {
-                playerNameProperty.setValue(playerNameField.getText());
-                highScoresManager.saveNewScore(new ScoreSerialized(
-                    (int) Math.round(finalScore),
-                    playerNameProperty.getValue(),
-                    Date.from(Instant.now())
-                ));
-                sceneManager.showMainMenu();
+                saveScoreAndLeave(playerNameField.getText());
+            });
+            layout.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    saveScoreAndLeave(playerNameField.getText());
+                }
             });
 
 
@@ -105,16 +101,21 @@ public class GameOverScreen implements ScreenInterface {
         backButton.setOnAction(e -> {
             sceneManager.showMainMenu();
         });
+
         layout.getChildren().add(backButton);
 
 
         screen = layout;
-
-
-
     }
 
-
+    private void saveScoreAndLeave(String name){
+        HighScoresManager.saveNewScore(new ScoreSerialized(
+            (int) Math.round(finalScore),
+            name,
+            Date.from(Instant.now())
+        ));
+        sceneManager.showMainMenu();
+    }
 
 
 }

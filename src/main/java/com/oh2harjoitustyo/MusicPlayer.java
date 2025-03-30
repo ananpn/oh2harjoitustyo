@@ -2,10 +2,8 @@ package com.oh2harjoitustyo;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 import java.io.File;
 import java.util.Random;
-//import javafx.scene.media.MediaPlayer;
 
 public class MusicPlayer {
 
@@ -27,7 +25,7 @@ public class MusicPlayer {
         currentlyPlayingPath = path;
         Media media = new Media(new File(currentlyPlayingPath).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
+        mediaPlayer.setVolume(0.4);
         mediaPlayer.play();
         // Restarts playback when song ends
         mediaPlayer.setOnEndOfMedia(() ->
@@ -59,7 +57,7 @@ public class MusicPlayer {
         currentlyPlayingPath = menuMusicPath;
         Media media = new Media(new File(currentlyPlayingPath).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
+        mediaPlayer.setVolume(0.4);
         mediaPlayer.play();
         // Restarts playback when song ends
         mediaPlayer.setOnEndOfMedia(() ->
