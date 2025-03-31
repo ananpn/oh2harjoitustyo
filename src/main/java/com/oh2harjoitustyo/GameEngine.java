@@ -114,7 +114,7 @@ public class GameEngine {
         gamePane.getChildren().add(entity.getShape()); // Add to pane
     }
 
-    /**
+    /** Starts the game and handles the gameplay-related events like keypresses and what happens every frame
      * @param scene Scene where the game is drawn.
      */
     public void start(Scene scene) {

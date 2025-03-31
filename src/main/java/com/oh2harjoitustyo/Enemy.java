@@ -24,7 +24,7 @@ public class Enemy extends Entity {
     private double sinFreqCoeff;
 
 
-    /** Initialized the Enemy object with random color and given radius, y-coordinate and speed.
+    /** Initializes the Enemy object with random color and given radius, y-coordinate and speed.
      * @param radius Radius of the enemy ball
      * @param originalY Y-coordinate where the enemy is created
      * @param speed The speed parameter

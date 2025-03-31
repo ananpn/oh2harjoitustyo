@@ -44,8 +44,8 @@ public class GameOverScreen implements ScreenInterface {
     }
 
 
-    /**
-     * @return
+    /** Returns the Pane where the game over screen is drawn
+     * @return GameOverScreen.screen
      */
     public Pane getScreen() {
         return screen;
