@@ -12,41 +12,80 @@ import javafx.scene.text.Text;
 
 import java.util.*;
 
-import static com.oh2harjoitustyo.Utils.maxEnergy;
+import static com.oh2harjoitustyo.Utils.MAX_ENERGY;
 
+/**
+ * Handles most events in the actual game
+ * @author Antti Puuronen
+ */
 public class GameEngine {
+    /**
+     * Project common SceneManager
+     */
     private final SceneManager sceneManager;
 
 
-    private final Pane gamePane; // The root pane
-    private long lastUpdate = 0; // Last frame time in milliseconds
+    /**
+     * Pane where the game is drawn
+     */
+    private final Pane gamePane;
 
+    /**
+     * Last frame time in milliseconds
+     */
+    private long lastUpdate = 0;
+
+    /**
+     * List of Entity enemies
+     */
     private final List<Entity> enemies = new ArrayList<>();
+
+    /**
+     * The player Entity
+     */
     private final Player player;
 
+    /**
+     * double for tracking game progress and from which the score is calculated
+     */
     private double baseScore = 0;
+
+    /**
+     * SimpleStringProperty for drawing the score text so that it updates in real time
+     */
     private SimpleStringProperty scoreTextProperty = new SimpleStringProperty();
 
 
+    /**
+     * AnimationTimer for the basic game event loop (what happens in one frame)
+     */
     private AnimationTimer gameLoop;
 
 
+    /**
+     * energy that is consumed by holding shift down
+     */
     private SimpleDoubleProperty energy = new SimpleDoubleProperty(1);
 
+    /**
+     * Milliseconds since an enemy was last spawned
+     */
     private double timeSinceLastSpawn = 0;
-    private double spawnIntervalMillis = Utils.originalSpawnInterval;
+    /**
+     * Current minimum spawn interval in milliseconds
+     */
+    private double spawnIntervalMillis = Utils.ORIGINAL_SPAWN_INTERVAL;
 
 
-    // Keeps track of currently pressed keys
+    /**
+     * Keeps track of currently pressed keys
+     */
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
 
     /** Constructs the GameEngine.
      * @param gamePane Pane where the game is drawn.
      * @param sceneManager The SceneManager of the whole project.
-     *
-     *
-     *
      */
     public GameEngine(Pane gamePane, SceneManager sceneManager) {
         this.player = new Player();
@@ -56,13 +95,13 @@ public class GameEngine {
         Text scoreText = new Text("");
         scoreText.setStroke(Color.WHITESMOKE);
         scoreText.textProperty().bind(scoreTextProperty);
-        scoreText.setTranslateY(40-Utils.screenHeight/2);
+        scoreText.setTranslateY(40-Utils.SCREEN_HEIGHT /2);
         gamePane.getChildren().add(scoreText);
 
         ProgressBar energyBar = new ProgressBar();
         energyBar.progressProperty().bind(energy);
         energyBar.setVisible(true);
-        energyBar.setTranslateY(-40+Utils.screenHeight/2);
+        energyBar.setTranslateY(-40+Utils.SCREEN_HEIGHT /2);
         gamePane.getChildren().add(energyBar);
     }
 
@@ -112,7 +151,7 @@ public class GameEngine {
 
                 }
 
-                spawnIntervalMillis = Utils.originalSpawnInterval - 170*diff;
+                spawnIntervalMillis = Utils.ORIGINAL_SPAWN_INTERVAL - 200*diff;
                 enemies.removeIf(entity -> entity.isOutOfBoundsLeft());
 
 
@@ -129,35 +168,36 @@ public class GameEngine {
     protected void updatePlayerMovement(double deltaTime) {
         double moveAmount = player.speed * deltaTime;
         if (pressedKeys.contains(KeyCode.SHIFT) && energy.get() > 0) {
-            player.setSpeed(Utils.playerSpeedSmall);
-            player.size.setValue(Utils.playerSizeSmall);
-            energy.set(Math.max(energy.getValue() - moveAmount/maxEnergy, 0));
+            player.setSpeed(Utils.PLAYER_SPEED_SMALL);
+            player.size.setValue(Utils.PLAYER_SIZE_SMALL);
+            energy.set(Math.max(energy.getValue() - moveAmount/ MAX_ENERGY, 0));
         }
         else {
-            player.setSpeed(Utils.playerSpeedBig);
-            player.size.setValue(Utils.playerSizeBig);
+            player.setSpeed(Utils.PLAYER_SPEED_BIG);
+            player.size.setValue(Utils.PLAYER_SIZE_BIG);
         }
         if (!pressedKeys.contains(KeyCode.SHIFT)) {
-            player.setSpeed(Utils.playerSpeedBig);
-            player.size.setValue(Utils.playerSizeBig);
-            energy.set(Math.min(energy.getValue() + 0.5*moveAmount/maxEnergy, 1));
+            player.setSpeed(Utils.PLAYER_SPEED_BIG);
+            player.size.setValue(Utils.PLAYER_SIZE_BIG);
+            energy.set(Math.min(energy.getValue() + 0.5*moveAmount/ MAX_ENERGY, 1));
         }
         if (pressedKeys.contains(KeyCode.UP))
             player.yPosition.set(
-                Utils.clampToScreenVertical(player.yPosition.get() - moveAmount, Utils.playerSizeBig)
+                Utils.clampToScreenVertical(player.yPosition.get() - moveAmount, Utils.PLAYER_SIZE_BIG)
             );
         if (pressedKeys.contains(KeyCode.DOWN))
             player.yPosition.set(
-                Utils.clampToScreenVertical(player.yPosition.get() + moveAmount, Utils.playerSizeBig)
+                Utils.clampToScreenVertical(player.yPosition.get() + moveAmount, Utils.PLAYER_SIZE_BIG)
             );
         if (pressedKeys.contains(KeyCode.LEFT))
             player.xPosition.set(
-                Utils.clampToScreenHorizontal(player.xPosition.get() - moveAmount, Utils.playerSizeBig)
+                Utils.clampToScreenHorizontal(player.xPosition.get() - moveAmount, Utils.PLAYER_SIZE_BIG)
             );
         if (pressedKeys.contains(KeyCode.RIGHT))
             player.xPosition.set(
-                Utils.clampToScreenHorizontal(player.xPosition.get() + moveAmount, Utils.playerSizeBig)
+                Utils.clampToScreenHorizontal(player.xPosition.get() + moveAmount, Utils.PLAYER_SIZE_BIG)
             );
+        //for debugging and adjustments
         /*
         if (pressedKeys.contains(KeyCode.SPACE)){
             System.out.println("difficulty: " + calculateDifficultyCoefficient());
@@ -169,6 +209,9 @@ public class GameEngine {
     }
 
 
+    /** Updates position of all Entity objects in the List enemies
+     * @param deltaTime double, milliseconds since last update
+     */
     private void updateEnemiesMovement(double deltaTime) {
         for (Entity entity : enemies) {
             entity.updateMovement(deltaTime, baseScore);
@@ -178,7 +221,8 @@ public class GameEngine {
 
 
     /**
-     * Checks if GameEngine.player intersects any of the Enemy objects in the List enemies, and causes death if this happens
+     * Checks if GameEngine.player intersects any of the Entity objects in the List enemies, and causes death if this happens.
+     * That is, onDeath() is called if player intersects enemies
      */
     private void checkCollisions() {
         for (Entity enemy : enemies) {
@@ -207,8 +251,9 @@ public class GameEngine {
     }
 
 
-
-
+    /**
+     * Stops the game, clears the List enemies, clears the gamePane, and moves to game over screen
+     */
     private void onDeath(){
         double finalScore = ScoreSerialized.baseScoreToActualScore(baseScore);
         gameLoop.stop();
@@ -221,6 +266,9 @@ public class GameEngine {
 
     }
 
+    /** Calculates and returns a difficulty coefficient based on the double baseScore
+     * @return Difficulty coefficient, between 0 and 0.75
+     */
     private double calculateDifficultyCoefficient(){
         return 0.75*(1-Math.exp(-baseScore/800.0));
 

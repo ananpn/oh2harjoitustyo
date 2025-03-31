@@ -4,6 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages high scores and reading and writing them to and from a file
+ * @author Antti Puuronen
+ */
 public class HighScoresManager {
 
 
@@ -31,26 +35,28 @@ public class HighScoresManager {
     public static boolean checkNewScore(double newScoreDouble) {
         readHighScores();
         highScores.sort(ScoreSerialized.comparator);
-        if (highScores.size() < Utils.maxHighScores){
+        if (highScores.size() < Utils.MAX_HIGH_SCORES){
             return true;
         }
-        while (highScores.size() > Utils.maxHighScores){
+        while (highScores.size() > Utils.MAX_HIGH_SCORES){
             highScores.removeLast();
         }
         return (highScores.getLast().getScore() < newScoreDouble);
     }
 
+    /** Saves new score to file and also adds it to HighScoreManager.highscores
+     * @param newScore New score to be saved
+     */
     public static void saveNewScore(ScoreSerialized newScore){
-
+        // Read List highScore from file
         readHighScores();
         highScores.sort(ScoreSerialized.comparator);
-        if (highScores.size() < Utils.maxHighScores){
+        if (highScores.size() < Utils.MAX_HIGH_SCORES){
             highScores.add(newScore);
             highScores.sort(ScoreSerialized.comparator);
-            saveHighScores();
         }
         else{
-            while (highScores.size() > Utils.maxHighScores){
+            while (highScores.size() > Utils.MAX_HIGH_SCORES){
                 highScores.removeLast();
             }
             highScores.sort(ScoreSerialized.comparator);
@@ -58,14 +64,15 @@ public class HighScoresManager {
                 highScores.removeLast();
                 highScores.add(newScore);
             }
-            saveHighScores();
-
         }
+        // Write the List highScores to file
+        saveHighScores();
 
     }
 
     /**
      * Saves HighScoreManager.highScores to file highscores.dat located in project root.
+     * @throws RuntimeException if something goes wrong while writing to file
      */
     public static void saveHighScores() {
         try(
@@ -76,17 +83,14 @@ public class HighScoresManager {
             //tätä ei tarvitse
             //outputStream.close();
         }
-        catch(Exception e){
-            throw new RuntimeException(e);
+        catch (IOException e) {
+            throw new RuntimeException("File write error: unable to save high scores", e);
         }
-
-
-
-
     }
 
     /**
      * Reads HighScoreManager.highScores from file highscores.dat located in project root
+     * @throws RuntimeException if the stored and read objects are of unknown class
      */
     public static void readHighScores() {
         initializeHighScores();
@@ -99,16 +103,16 @@ public class HighScoresManager {
             //inputStream.close();
         }
         catch (FileNotFoundException e) {
+            System.out.println("Error: file not found, cannot read high scores");
             e.printStackTrace();
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: something went wrong while reading file");
+            e.printStackTrace();
         }
         catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error: the stored and read objects are of unknown class", e);
         }
-
-
     }
 
 
@@ -121,6 +125,9 @@ public class HighScoresManager {
     }
 
 
+    /**
+     * Empties the highScores List and saves the empty list to file highscores.dat
+     */
     public static void clearHighScores(){
         highScores.clear();
         saveHighScores();

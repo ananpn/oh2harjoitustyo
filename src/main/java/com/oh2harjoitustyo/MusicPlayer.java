@@ -5,13 +5,26 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.util.Random;
 
+/**
+ * Handles music in the app
+ * @author Antti Puuronen
+ */
 public class MusicPlayer {
 
-    private static final String menuMusicPath = "src/main/resources/com/oh2harjoitustyo/MenuMusic.mp3";
+    /**
+     * Path of menu music
+     */
+    private static final String MENU_MUSIC_PATH = "src/main/resources/com/oh2harjoitustyo/MenuMusic.mp3";
 
-    static MediaPlayer mediaPlayer;
+    /**
+     * Project common mediaplayer
+     */
+    private static MediaPlayer mediaPlayer;
 
-    static String currentlyPlayingPath = "";
+    /**
+     * Path of currently playing music file relative to project root
+     */
+    private static String currentlyPlayingPath = "";
 
     /**
      * Starts playing a random game music file
@@ -50,18 +63,20 @@ public class MusicPlayer {
      */
     public static void playMenuMusic(){
         // This is to prevent music stopping when returning from the High Scores screen
-        if (currentlyPlayingPath.equals(menuMusicPath)){
+        if (currentlyPlayingPath.equals(MENU_MUSIC_PATH)){
             return;
         }
         stopMusic();
-        currentlyPlayingPath = menuMusicPath;
+        currentlyPlayingPath = MENU_MUSIC_PATH;
         Media media = new Media(new File(currentlyPlayingPath).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(0.4);
         mediaPlayer.play();
         // Restarts playback when song ends
-        mediaPlayer.setOnEndOfMedia(() ->
-            playMenuMusic()
+        mediaPlayer.setOnEndOfMedia(() -> {
+                currentlyPlayingPath = "";
+                playMenuMusic();
+            }
         );
     }
 

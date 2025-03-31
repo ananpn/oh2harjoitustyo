@@ -14,6 +14,11 @@ import javafx.scene.text.Text;
 import java.time.Instant;
 import java.util.Date;
 
+
+/**
+ * Class for handling the game over screen
+ * @author Antti Puuronen
+ */
 public class GameOverScreen implements ScreenInterface {
     private double finalScore;
 
@@ -21,27 +26,39 @@ public class GameOverScreen implements ScreenInterface {
         this.finalScore = finalScore;
     }
 
+    /**
+     * Pane for drawing the game over screen
+     */
     Pane screen;
 
+    /**
+     * Should be the project common SceneManager
+     */
     SceneManager sceneManager;
 
+    /** Constructor for GameOverScreen, sets GameOverScreen.sceneManager
+     * @param sceneManager Should be the project common SceneManager
+     */
     public GameOverScreen(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
     }
 
+
+    /**
+     * @return
+     */
     public Pane getScreen() {
         return screen;
     }
 
 
     /**
-     * Creates the Game Over -screen on a StackPane object and returns it.
-     * @return StackPane containing the Game Over -screen
+     * Creates the game over screen on a StackPane object and sets is as GameOverScreen.screen
      */
     public void createScreen(){
         StackPane layout = new StackPane();
         layout.setStyle("-fx-background-color: #030303");
-        layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
+        layout.setMinSize(Utils.SCREEN_WIDTH, Utils.SCREEN_HEIGHT);
         layout.setAlignment(Pos.CENTER);
 
         Text highScoreText = new Text("Game Over");
@@ -55,8 +72,6 @@ public class GameOverScreen implements ScreenInterface {
 
         layout.getChildren().add(highScoreText);
         layout.getChildren().add(finalScoreText);
-
-
 
         HighScoresManager.readHighScores();
         if (HighScoresManager.checkNewScore(finalScore)) {
@@ -81,7 +96,6 @@ public class GameOverScreen implements ScreenInterface {
                 }
             });
 
-
             nameBox.setAlignment(Pos.CENTER);
             nameBox.setTranslateY(200);
 
@@ -89,12 +103,7 @@ public class GameOverScreen implements ScreenInterface {
             layout.getChildren().add(nameBox);
             layout.getChildren().add(givePlayerName);
             layout.getChildren().add(newScoreText);
-
-
-
-
         };
-
 
         Button backButton = new Button("Back");
         backButton.setTranslateX(-400);
@@ -104,10 +113,12 @@ public class GameOverScreen implements ScreenInterface {
 
         layout.getChildren().add(backButton);
 
-
         screen = layout;
     }
 
+    /** Saves the score with the given name, and leaves to main menu
+     * @param name Player name
+     */
     private void saveScoreAndLeave(String name){
         HighScoresManager.saveNewScore(new ScoreSerialized(
             (int) Math.round(finalScore),

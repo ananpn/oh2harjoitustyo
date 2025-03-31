@@ -7,7 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-// enemy
+/**
+ * Handles enemies in the game
+ * @author Antti Puuronen
+ */
 public class Enemy extends Entity {
 
     /**
@@ -38,7 +41,7 @@ public class Enemy extends Entity {
         //this.setWidth(40);
         //this.setHeight(40)
 
-        xPosition.set(Utils.screenWidth);
+        xPosition.set(Utils.SCREEN_WIDTH);
         yPosition.set(originalY);
 
         List<Color> colors = Arrays.asList(

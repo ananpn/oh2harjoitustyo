@@ -4,15 +4,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 
-// Player character
+/**
+ * Class for handling the player character
+ * @author Antti Puuronen
+ */
 public class Player extends Entity{
 
+    /**
+     * Constructor for player, sets properties to defaults
+     */
     public Player(){
-        this.shape = new Circle(Utils.playerSizeBig);
-        this.size.setValue(Utils.playerSizeBig);
+        this.shape = new Circle(Utils.PLAYER_SIZE_BIG);
+        this.size.setValue(Utils.PLAYER_SIZE_BIG);
         ((Circle) shape).radiusProperty().bind(size);
 
-        this.speed = Utils.playerSpeedBig;
+        this.speed = Utils.PLAYER_SPEED_BIG;
         this.xPosition.setValue(-300d);
 
 
@@ -24,6 +30,9 @@ public class Player extends Entity{
         shape.translateYProperty().bind(yPosition);
     }
 
+    /** Sets the speed of the player Entity
+     * @param speed double, speed of the player Entity
+     */
     public void setSpeed(double speed){
         this.speed = speed;
     }

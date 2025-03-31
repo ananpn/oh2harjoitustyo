@@ -7,10 +7,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import static com.oh2harjoitustyo.Utils.backGroundBarColor;
-import static com.oh2harjoitustyo.Utils.backGroundColor;
+import static com.oh2harjoitustyo.Utils.BACKGROUNDBARCOLOR;
+import static com.oh2harjoitustyo.Utils.BACKGROUNDCOLOR;
 
 
+
+/**
+ * Class for handling the game screen
+ * @author Antti Puuronen
+ */
 public class GameScreen implements ScreenInterface {
 
 
@@ -36,6 +41,7 @@ public class GameScreen implements ScreenInterface {
     /** Returns the Pane where the game is drawn
      * @return returns GameScreen.screen
      */
+    @Override
     public Pane getScreen(){
         return screen;
     }
@@ -47,22 +53,24 @@ public class GameScreen implements ScreenInterface {
     public void createScreen(){
 
         StackPane layout = new StackPane();
-        layout.setStyle(backGroundColor);
+        layout.setStyle(BACKGROUNDCOLOR);
+
+        // top and bottom bar to show bounds
         StackPane topBar = new StackPane();
-        topBar.setMinSize(Utils.screenWidth, 140);
-        topBar.setMaxSize(Utils.screenWidth, 140);
-        topBar.setStyle(backGroundBarColor);
+        topBar.setMinSize(Utils.SCREEN_WIDTH, 140);
+        topBar.setMaxSize(Utils.SCREEN_WIDTH, 140);
+        topBar.setStyle(BACKGROUNDBARCOLOR);
         layout.getChildren().add(topBar);
-        topBar.setTranslateY(Utils.screenHeight/2);
+        topBar.setTranslateY(Utils.SCREEN_HEIGHT /2);
 
         StackPane bottomBar = new StackPane();
-        bottomBar.setMinSize(Utils.screenWidth, 140);
-        bottomBar.setMaxSize(Utils.screenWidth, 140);
-        bottomBar.setStyle(backGroundBarColor);
+        bottomBar.setMinSize(Utils.SCREEN_WIDTH, 140);
+        bottomBar.setMaxSize(Utils.SCREEN_WIDTH, 140);
+        bottomBar.setStyle(BACKGROUNDBARCOLOR);
         layout.getChildren().add(bottomBar);
-        bottomBar.setTranslateY(-Utils.screenHeight/2);
+        bottomBar.setTranslateY(-Utils.SCREEN_HEIGHT /2);
         
-        layout.setMinSize(Utils.screenWidth, Utils.screenHeight);
+        layout.setMinSize(Utils.SCREEN_WIDTH, Utils.SCREEN_HEIGHT);
         screen = layout;
 
     }
